@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🎹 Desktop Piano - Sa Re Ga Ma</title>
+</head>
+<body bgcolor="#1a1a1a" text="#ffffff">
+
+    <center>
+        <br>
+        <h1>🎹 DESKTOP PIANO 🎹</h1>
+        <hr size="4" color="#00ffff" width="60%">
+
+        <h3>🎼 Standard Indian Sargam (Sa Re Ga Ma Pa Dha Ni Sa) 🎼</h3>
+
+        <button id="unlockBtn" onclick="unlockAudio()" style="background-color: #ff00ff; color: white; padding: 15px; font-size: 18px; border-radius: 10px; cursor: pointer;">
+            🔓 CLICK HERE FIRST TO UNLOCK SOUND
+        </button>
+
+        <br><br>
+
+        <table border="5" cellpadding="30" bgcolor="#333333">
+            <tr>
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Sa</h2></font>
+                    <button onclick="playPianoNote(261.63)">🎵 <b>Q</b> / <b>A</b></button>
+                </td>
+
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Re</h2></font>
+                    <button onclick="playPianoNote(293.66)">🎵 <b>W</b> / <b>S</b></button>
+                </td>
+
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Ga</h2></font>
+                    <button onclick="playPianoNote(329.63)">🎵 <b>E</b> / <b>D</b></button>
+                </td>
+
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Ma</h2></font>
+                    <button onclick="playPianoNote(349.23)">🎵 <b>R</b> / <b>F</b></button>
+                </td>
+
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Pa</h2></font>
+                    <button onclick="playPianoNote(392.00)">🎵 <b>T</b> / <b>G</b></button>
+                </td>
+
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Dha</h2></font>
+                    <button onclick="playPianoNote(440.00)">🎵 <b>Y</b> / <b>H</b></button>
+                </td>
+
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Ni</h2></font>
+                    <button onclick="playPianoNote(493.88)">🎵 <b>U</b> / <b>J</b></button>
+                </td>
+
+                <td align="center" bgcolor="#ffffff">
+                    <font color="#000000"><h2>Sa'</h2></font>
+                    <button onclick="playPianoNote(523.25)">🎵 <b>I</b> / <b>K</b></button>
+                </td>
+            </tr>
+        </table>
+
+        <br>
+        <hr size="2" color="#ff00ff" width="40%">
+
+        <br>
+        <font color="#00ffff" size="5"><b>🛠️ Developed by Aagam 🛠️</b></font>
+        <br><br>
+
+    </center>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function unlockAudio() {
+            audioCtx.resume().then(() => {
+                document.getElementById('unlockBtn').style.display = 'none';
+            });
+        }
+
+        function playPianoNote(frequency) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'triangle'; 
+            oscillator.frequency.value = frequency;
+
+            const now = audioCtx.currentTime;
+            
+            // Piano sound profile (Sharp hit, slow fade-out)
+            gainNode.gain.setValueAtTime(0, now); 
+            gainNode.gain.linearRampToValueAtTime(0.8, now + 0.02); 
+            gainNode.gain.linearRampToValueAtTime(0.3, now + 0.2); 
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start(now);
+            oscillator.stop(now + 1.5); 
+        }
+
+        document.addEventListener('keydown', function(event) {
+            const key = event.key.toLowerCase();
+            
+            if (key === 'q' || key === 'a') playPianoNote(261.63);
+            if (key === 'w' || key === 's') playPianoNote(293.66);
+            if (key === 'e' || key === 'd') playPianoNote(329.63);
+            if (key === 'r' || key === 'f') playPianoNote(349.23);
+            if (key === 't' || key === 'g') playPianoNote(392.00);
+            if (key === 'y' || key === 'h') playPianoNote(440.00);
+            if (key === 'u' || key === 'j') playPianoNote(493.88);
+            if (key === 'i' || key === 'k') playPianoNote(523.25);
+        });
+    </script>
+
+</body>
+</html>
